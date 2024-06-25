@@ -174,42 +174,6 @@
           </executions>
         </plugin>
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>animal-sniffer-maven-plugin</artifactId>
-          <version>1.23</version>
-          <dependencies>
-            <dependency>
-              <groupId>org.ow2.asm</groupId>
-              <artifactId>asm</artifactId>
-              <version>9.6</version>
-            </dependency>
-          </dependencies>
-          <configuration>
-            <annotations>com.google.common.base.IgnoreJRERequirement,com.google.common.cache.IgnoreJRERequirement,com.google.common.collect.IgnoreJRERequirement,com.google.common.hash.IgnoreJRERequirement,com.google.common.io.IgnoreJRERequirement,com.google.common.reflect.IgnoreJRERequirement,com.google.common.testing.IgnoreJRERequirement</annotations>
-            <checkTestClasses>true</checkTestClasses>
-            <signature>
-              <groupId>com.toasttab.android</groupId>
-              <artifactId>gummy-bears-api-21</artifactId>
-              <version>0.8.0</version>
-              <!-- TODO(cpovirk): In principle, it would make sense to *also* test compatibility with JDK 1.8, since guava-android also has JRE users. -->
-            </signature>
-            <ignores>
-              <!-- Unsafe isn't part of the documented Android API, but it is available.
-                   And in cases where it's not, we have fallbacks (except maybe Striped64 (b/307807965)?). -->
-              <ignore>sun.misc.Unsafe</ignore>
-            </ignores>
-          </configuration>
-          <executions>
-            <execution>
-              <id>check-java-version-compatibility</id>
-              <phase>test</phase>
-              <goals>
-                <goal>check</goal>
-              </goals>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
           <artifactId>maven-javadoc-plugin</artifactId>
           <version>3.5.0</version>
           <configuration>
