@@ -37,7 +37,7 @@ public class ExecutionListTest extends TestCase {
   private final ExecutionList list = new ExecutionList();
 
   public void testRunOnPopulatedList() throws Exception {
-    Executor exec = Executors.newCachedThreadPool();
+    Executor exec = Executors.newVirtualThreadPerTaskExecutor();
     CountDownLatch countDownLatch = new CountDownLatch(3);
     list.add(new MockRunnable(countDownLatch), exec);
     list.add(new MockRunnable(countDownLatch), exec);
@@ -107,7 +107,7 @@ public class ExecutionListTest extends TestCase {
 
     // If it passed, then verify an Add will be executed without calling run
     CountDownLatch countDownLatch = new CountDownLatch(1);
-    list.add(new MockRunnable(countDownLatch), Executors.newCachedThreadPool());
+    list.add(new MockRunnable(countDownLatch), Executors.newVirtualThreadPerTaskExecutor());
     assertTrue(countDownLatch.await(1L, TimeUnit.SECONDS));
   }
 

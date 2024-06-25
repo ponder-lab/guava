@@ -327,7 +327,7 @@ public class SequentialExecutorTest extends TestCase {
           }
         };
     final SequentialExecutor executor = new SequentialExecutor(delegate);
-    final ExecutorService blocked = Executors.newCachedThreadPool();
+    final ExecutorService blocked = Executors.newVirtualThreadPerTaskExecutor();
     Future<?> first =
         blocked.submit(
             new Runnable() {

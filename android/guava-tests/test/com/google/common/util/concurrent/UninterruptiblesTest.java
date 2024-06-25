@@ -24,7 +24,7 @@ import static com.google.common.util.concurrent.Uninterruptibles.putUninterrupti
 import static com.google.common.util.concurrent.Uninterruptibles.takeUninterruptibly;
 import static com.google.common.util.concurrent.Uninterruptibles.tryAcquireUninterruptibly;
 import static com.google.common.util.concurrent.Uninterruptibles.tryLockUninterruptibly;
-import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
@@ -469,7 +469,7 @@ public class UninterruptiblesTest extends TestCase {
 
   // executor.awaitTermination Testcases
   public void testTryAwaitTerminationUninterruptiblyLongTimeUnit_success() {
-    ExecutorService executor = newFixedThreadPool(1);
+    ExecutorService executor = newVirtualThreadPerTaskExecutor();
     requestInterruptIn(500);
     executor.execute(new SleepTask(1000));
     executor.shutdown();
@@ -479,7 +479,7 @@ public class UninterruptiblesTest extends TestCase {
   }
 
   public void testTryAwaitTerminationUninterruptiblyLongTimeUnit_failure() {
-    ExecutorService executor = newFixedThreadPool(1);
+    ExecutorService executor = newVirtualThreadPerTaskExecutor();
     requestInterruptIn(500);
     executor.execute(new SleepTask(10000));
     executor.shutdown();
@@ -489,7 +489,7 @@ public class UninterruptiblesTest extends TestCase {
   }
 
   public void testTryAwaitTerminationInfiniteTimeout() {
-    ExecutorService executor = newFixedThreadPool(1);
+    ExecutorService executor = newVirtualThreadPerTaskExecutor();
     requestInterruptIn(500);
     executor.execute(new SleepTask(1000));
     executor.shutdown();

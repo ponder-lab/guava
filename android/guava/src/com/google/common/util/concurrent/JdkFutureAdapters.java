@@ -109,7 +109,7 @@ public final class JdkFutureAdapters {
             .setNameFormat("ListenableFutureAdapter-thread-%d")
             .build();
     private static final Executor defaultAdapterExecutor =
-        Executors.newCachedThreadPool(threadFactory);
+        Executors.newVirtualThreadPerTaskExecutor();
 
     private final Executor adapterExecutor;
 

@@ -24,7 +24,7 @@ import static com.google.common.graph.TestUtil.assertStronglyEquivalent;
 import static com.google.common.graph.TestUtil.sanityCheckSet;
 import static com.google.common.truth.Truth.assertThat;
 import static com.google.common.truth.TruthJUnit.assume;
-import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
@@ -811,7 +811,7 @@ public abstract class AbstractNetworkTest {
     addEdge(5, 6, "baz");
 
     int threadCount = 20;
-    ExecutorService executor = newFixedThreadPool(threadCount);
+    ExecutorService executor = newVirtualThreadPerTaskExecutor();
     final CyclicBarrier barrier = new CyclicBarrier(threadCount);
     ImmutableList.Builder<Future<?>> futures = ImmutableList.builder();
     for (int i = 0; i < threadCount; i++) {

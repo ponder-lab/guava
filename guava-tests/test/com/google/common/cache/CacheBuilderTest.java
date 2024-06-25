@@ -493,7 +493,7 @@ public class CacheBuilderTest extends TestCase {
     computationShouldWait.set(true);
 
     final AtomicInteger computedCount = new AtomicInteger();
-    ExecutorService threadPool = Executors.newFixedThreadPool(nThreads);
+    ExecutorService threadPool = Executors.newVirtualThreadPerTaskExecutor();
     final CountDownLatch tasksFinished = new CountDownLatch(nTasks);
     for (int i = 0; i < nTasks; i++) {
       final String s = "a" + i;
@@ -591,7 +591,7 @@ public class CacheBuilderTest extends TestCase {
             .maximumSize(5000)
             .build(countingIdentityLoader);
 
-    ExecutorService threadPool = Executors.newFixedThreadPool(nThreads);
+    ExecutorService threadPool = Executors.newVirtualThreadPerTaskExecutor();
     for (int i = 0; i < nTasks; i++) {
       @SuppressWarnings("unused") // https://errorprone.info/bugpattern/FutureReturnValueIgnored
       Future<?> possiblyIgnoredError =

@@ -19,7 +19,7 @@ package com.google.common.graph;
 import static com.google.common.graph.GraphConstants.ENDPOINTS_MISMATCH;
 import static com.google.common.graph.TestUtil.assertStronglyEquivalent;
 import static com.google.common.truth.Truth.assertThat;
-import static java.util.concurrent.Executors.newFixedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 import static org.junit.Assert.assertThrows;
 
 import com.google.common.collect.ImmutableList;
@@ -479,7 +479,7 @@ public final class ValueGraphTest {
     graph.putEdgeValue(5, 6, "C");
 
     int threadCount = 20;
-    ExecutorService executor = newFixedThreadPool(threadCount);
+    ExecutorService executor = newVirtualThreadPerTaskExecutor();
     final CyclicBarrier barrier = new CyclicBarrier(threadCount);
     ImmutableList.Builder<Future<?>> futures = ImmutableList.builder();
     for (int i = 0; i < threadCount; i++) {

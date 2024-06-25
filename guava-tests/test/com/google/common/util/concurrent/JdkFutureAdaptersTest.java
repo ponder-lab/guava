@@ -20,7 +20,7 @@ import static com.google.common.base.Preconditions.checkState;
 import static com.google.common.util.concurrent.Futures.immediateFuture;
 import static com.google.common.util.concurrent.JdkFutureAdapters.listenInPoolThread;
 import static com.google.common.util.concurrent.MoreExecutors.directExecutor;
-import static java.util.concurrent.Executors.newCachedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 import com.google.common.testing.ClassSanityTester;
@@ -102,7 +102,7 @@ public class JdkFutureAdaptersTest extends TestCase {
 
   public void testListenInPoolThreadUsesGivenExecutor() throws Exception {
     ExecutorService executorService =
-        newCachedThreadPool(new ThreadFactoryBuilder().setDaemon(true).build());
+        newVirtualThreadPerTaskExecutor();
     NonListenableSettableFuture<String> abstractFuture = NonListenableSettableFuture.create();
     ExecutorSpy spy = new ExecutorSpy(executorService);
     ListenableFuture<String> listenableFuture = listenInPoolThread(abstractFuture, spy);
