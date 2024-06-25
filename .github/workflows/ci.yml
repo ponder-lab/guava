@@ -3,10 +3,10 @@ name: CI
 on:
   push:
     branches:
-      - master
+      - main_rethreader
   pull_request:
     branches:
-      - master
+      - main_rethreader
 
 permissions:
   contents: read
