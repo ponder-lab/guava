@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - main_rethreader
+      - java21_rethreader
+      - fibers_rethreader
   pull_request:
     branches:
       - main_rethreader
+      - java21_rethreader
+      - fibers_rethreader
 
 permissions:
   contents: read
