@@ -432,7 +432,9 @@ public class AbstractFutureTest extends TestCase {
                 + 50 // for the listeners
                 + 50 // for the blocking get threads,
                 + 1); // for the main thread
-    final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+    // Refactoring this causes AbstractFutureFallbackAtomicHelperTest to hang forever
+    // (https://github.com/ponder-lab/guava/actions/runs/9654663319/job/26629281352#step:6:1102)
+    final ExecutorService executor = Executors.newFixedThreadPool(barrier.getParties());
     final AtomicReference<AbstractFuture<String>> currentFuture = Atomics.newReference();
     final AtomicInteger numSuccessfulSetCalls = new AtomicInteger();
     Callable<@Nullable Void> completeSuccessfullyRunnable =
@@ -617,7 +619,9 @@ public class AbstractFutureTest extends TestCase {
                 + size // for the listeners
                 + size // for the get threads,
                 + 1); // for the main thread
-    final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+    // Refactoring this causes AbstractFutureFallbackAtomicHelperTest to hang forever
+    // (https://github.com/ponder-lab/guava/actions/runs/9654663319/job/26629281352#step:6:1102)
+    final ExecutorService executor = Executors.newFixedThreadPool(barrier.getParties());
     final AtomicReference<AbstractFuture<String>> currentFuture = Atomics.newReference();
     final AtomicReference<AbstractFuture<String>> setFutureFuture = Atomics.newReference();
     final AtomicBoolean setFutureSetSuccess = new AtomicBoolean();
@@ -750,7 +754,9 @@ public class AbstractFutureTest extends TestCase {
             2 // for the setter threads
                 + 1 // for the blocking get thread,
                 + 1); // for the main thread
-    final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+    // Refactoring this causes AbstractFutureFallbackAtomicHelperTest to hang forever
+    // (https://github.com/ponder-lab/guava/actions/runs/9654663319/job/26629281352#step:6:1102)
+    final ExecutorService executor = Executors.newFixedThreadPool(barrier.getParties());
     final AtomicReference<AbstractFuture<String>> currentFuture = Atomics.newReference();
     final AtomicBoolean setFutureSuccess = new AtomicBoolean();
     final AtomicBoolean cancellationSuccess = new AtomicBoolean();
