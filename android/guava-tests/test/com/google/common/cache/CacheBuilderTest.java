@@ -600,6 +600,7 @@ public class CacheBuilderTest extends TestCase {
             .removalListener(removalListener)
             .maximumSize(5000)
             .build(countingIdentityLoader);
+    
     // Refactoring this causes test to hang for a while and eventually give wrong result
     // https://github.com/ponder-lab/guava/actions/runs/9736322153/job/26866789783#step:6:328
     ExecutorService threadPool = Executors.newFixedThreadPool(nThreads);
