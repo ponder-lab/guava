@@ -416,12 +416,9 @@ public class SuppliersTest extends TestCase {
 
     for (int i = 0; i < numThreads; i++) {
       threads[i] =
-          new Thread() {
-            @Override
-            public void run() {
-              assertSame(Boolean.TRUE, memoizedSupplier.get());
-            }
-          };
+          Thread.ofVirtual().unstarted(() -> {
+            assertSame(Boolean.TRUE, memoizedSupplier.get());
+          });
     }
     for (Thread t : threads) {
       t.start();
@@ -457,14 +454,11 @@ public class SuppliersTest extends TestCase {
     Thread[] threads = new Thread[numThreads];
     for (int i = 0; i < numThreads; i++) {
       threads[i] =
-          new Thread() {
-            @Override
-            public void run() {
-              for (int j = 0; j < iterations; j++) {
-                Object unused = Suppliers.synchronizedSupplier(nonThreadSafe).get();
-              }
+          Thread.ofVirtual().unstarted(() -> {
+            for (int j = 0; j < iterations; j++) {
+              Object unused = Suppliers.synchronizedSupplier(nonThreadSafe).get();
             }
-          };
+          });
     }
     for (Thread t : threads) {
       t.start();
