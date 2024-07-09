@@ -573,7 +573,7 @@ public class MoreExecutorsTest extends JSR166TestCase {
   public void testGetExitingExecutorService_executorSetToUseDaemonThreads() {
     TestApplication application = new TestApplication();
     ThreadPoolExecutor executor =
-        Executors.newVirtualThreadPerTaskExecutor();
+        new ThreadPoolExecutor(1, 2, 3, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(1));
     assertNotNull(application.getExitingExecutorService(executor));
     assertTrue(executor.getThreadFactory().newThread(EMPTY_RUNNABLE).isDaemon());
   }
