@@ -416,12 +416,9 @@ public class SuppliersTest extends TestCase {
 
     for (int i = 0; i < numThreads; i++) {
       threads[i] =
-          new Thread() {
-            @Override
-            public void run() {
-              assertSame(Boolean.TRUE, memoizedSupplier.get());
-            }
-          };
+          Thread.ofVirtual().unstarted(() -> {
+            assertSame(Boolean.TRUE, memoizedSupplier.get());
+          });
     }
     for (Thread t : threads) {
       t.start();
