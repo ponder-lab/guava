@@ -36,8 +36,6 @@ import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -229,7 +227,7 @@ public class ExecutionListBenchmark {
     abstract ExecutionListWrapper newExecutionList();
   }
 
-  private ExecutorService executorService;
+  private ThreadPoolExecutor executorService;
   private CountDownLatch listenerLatch;
   private ExecutionListWrapper list;
 
@@ -249,7 +247,13 @@ public class ExecutionListBenchmark {
   @BeforeExperiment
   void setUp() throws Exception {
     executorService =
-        Executors.newVirtualThreadPerTaskExecutor();
+        new ThreadPoolExecutor(
+            NUM_THREADS,
+            NUM_THREADS,
+            Long.MAX_VALUE,
+            TimeUnit.SECONDS,
+            new ArrayBlockingQueue<Runnable>(1000));
+    executorService.prestartAllCoreThreads();
     final AtomicInteger integer = new AtomicInteger();
     // Execute a bunch of tasks to ensure that our threads are allocated and hot
     for (int i = 0; i < NUM_THREADS * 10; i++) {
