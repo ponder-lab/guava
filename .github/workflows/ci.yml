@@ -63,6 +63,11 @@ jobs:
         if: matrix.java == 11
         shell: bash
         run: util/gradle_integration_tests.sh
+      - name: 'Benchmarks'
+        shell: bash
+        run: |
+          ./mvnw -B -P!standard-with-extra-repos exec:java -U -Dmaven.javadoc.skip=true -Dbenchmark=com.google.common.collect.ConcurrentHashMultisetBenchmark -f $ROOT_POM -pl guava-tests
+          ./mvnw -B -P!standard-with-extra-repos exec:java -U -Dmaven.javadoc.skip=true -Dbenchmark=com.google.common.collect.AbstractFutureFootprintBenchmark -f $ROOT_POM -pl guava-tests
 
   publish_snapshot:
     name: 'Publish snapshot'

@@ -5,7 +5,7 @@
   <parent>
     <groupId>com.google.guava</groupId>
     <artifactId>guava-parent</artifactId>
-    <version>HEAD-android-SNAPSHOT</version>
+    <version>HEAD-jre-SNAPSHOT</version>
   </parent>
   <artifactId>guava-tests</artifactId>
   <name>Guava Unit Tests</name>
@@ -48,6 +48,12 @@
     <dependency>
       <groupId>com.google.truth</groupId>
       <artifactId>truth</artifactId>
+      <version>${truth.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.google.truth.extensions</groupId>
+      <artifactId>truth-java8-extension</artifactId>
       <version>${truth.version}</version>
       <scope>test</scope>
     </dependency>
@@ -114,6 +120,18 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>3.1.0</version>
+        <configuration>
+          <classpathScope>test</classpathScope>
+          <mainClass>com.google.caliper.runner.CaliperMain</mainClass>
+          <arguments>
+            <argument>${benchmark}</argument>
+          </arguments>
+        </configuration>
       </plugin>
     </plugins>
   </build>
