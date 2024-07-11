@@ -590,8 +590,10 @@ public class CacheBuilderTest extends TestCase {
             .removalListener(removalListener)
             .maximumSize(5000)
             .build(countingIdentityLoader);
+            
+    System.out.println("Starting for loop");
 
-    ExecutorService threadPool = Executors.newFixedThreadPool(nThreads);
+    ExecutorService threadPool = Executors.newVirtualThreadPerTaskExecutor();
     for (int i = 0; i < nTasks; i++) {
       @SuppressWarnings("unused") // https://errorprone.info/bugpattern/FutureReturnValueIgnored
       Future<?> possiblyIgnoredError =
@@ -616,16 +618,22 @@ public class CacheBuilderTest extends TestCase {
     // other operations, the cache and the removal queue won't change from this point on.
 
     // Verify that each received removal notification was valid
+    System.out.println("For loop finished");
     for (RemovalNotification<String, String> notification : removalListener) {
       assertEquals("Invalid removal notification", notification.getKey(), notification.getValue());
     }
+    System.out.println("Assertion 1 passed");
 
     CacheStats stats = cache.stats();
     assertEquals(removalListener.size(), stats.evictionCount());
+    System.out.println("Assertion 2 passed");
     assertEquals(computeCount.get(), stats.loadSuccessCount());
+    System.out.println("Assertion 3 passed");
     assertEquals(exceptionCount.get() + computeNullCount.get(), stats.loadExceptionCount());
+    System.out.println("Assertion 4 passed");
     // each computed value is still in the cache, or was passed to the removal listener
     assertEquals(computeCount.get(), cache.size() + removalListener.size());
+    System.out.println("Assertion 5 passed");
   }
 
   @GwtIncompatible // NullPointerTester
