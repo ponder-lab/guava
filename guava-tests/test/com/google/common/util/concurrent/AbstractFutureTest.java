@@ -592,8 +592,8 @@ public class AbstractFutureTest extends TestCase {
       currentFuture.set(future);
       System.out.println("future set as current");
       for (Callable<?> task : allTasks) {
-        @SuppressWarnings("unused") // https://errorprone.info/bugpattern/FutureReturnValueIgnored
         System.out.println("Submitting task " + task);
+        @SuppressWarnings("unused") // https://errorprone.info/bugpattern/FutureReturnValueIgnored
         Future<?> possiblyIgnoredError = executor.submit(task);
       }
       awaitUnchecked(barrier);
@@ -842,8 +842,8 @@ public class AbstractFutureTest extends TestCase {
       currentFuture.set(future);
       System.out.println("future set as current");
       for (Callable<?> task : allTasks) {
-        @SuppressWarnings("unused") // https://errorprone.info/bugpattern/FutureReturnValueIgnored
         System.out.println("Submitting task " + task);
+        @SuppressWarnings("unused") // https://errorprone.info/bugpattern/FutureReturnValueIgnored
         Future<?> possiblyIgnoredError = executor.submit(task);
       }
       awaitUnchecked(barrier);
