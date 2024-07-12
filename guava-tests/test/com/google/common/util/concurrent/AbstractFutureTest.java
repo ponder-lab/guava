@@ -582,7 +582,7 @@ public class AbstractFutureTest extends TestCase {
     }
     System.out.println("First for loop done");
     assertEquals(allTasks.size() + 1, barrier.getParties());
-    System.out.println("Assertion passed; about to start second for loop")
+    System.out.println("Assertion passed; about to start second for loop");
     for (int i = 0; i < 1000; i++) {
       System.out.println("Second for loop: i = " + i);
       Collections.shuffle(allTasks);
