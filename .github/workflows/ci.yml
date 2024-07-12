@@ -6,11 +6,13 @@ on:
       - main_rethreader
       - java21_rethreader
       - fibers_rethreader
+      - fibers_rethreader_temp2
   pull_request:
     branches:
       - main_rethreader
       - java21_rethreader
       - fibers_rethreader
+      - fibers_rethreader_temp2
 
 permissions:
   contents: read
