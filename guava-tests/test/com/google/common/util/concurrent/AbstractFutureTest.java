@@ -444,6 +444,7 @@ public class AbstractFutureTest extends TestCase {
               numSuccessfulSetCalls.incrementAndGet();
             }
             awaitUnchecked(barrier);
+            System.out.println("completeSuccessfullyRunnable returned");
             return null;
           }
         };
@@ -457,6 +458,7 @@ public class AbstractFutureTest extends TestCase {
               numSuccessfulSetCalls.incrementAndGet();
             }
             awaitUnchecked(barrier);
+            System.out.println("completeExceptionallyRunnable returned");
             return null;
           }
         };
@@ -468,6 +470,7 @@ public class AbstractFutureTest extends TestCase {
               numSuccessfulSetCalls.incrementAndGet();
             }
             awaitUnchecked(barrier);
+            System.out.println("cancelRunnable returned");
             return null;
           }
         };
@@ -481,6 +484,7 @@ public class AbstractFutureTest extends TestCase {
               numSuccessfulSetCalls.incrementAndGet();
             }
             awaitUnchecked(barrier);
+            System.out.println("setFutureCompleteSuccessfullyRunnable returned");
             return null;
           }
         };
@@ -495,6 +499,7 @@ public class AbstractFutureTest extends TestCase {
               numSuccessfulSetCalls.incrementAndGet();
             }
             awaitUnchecked(barrier);
+            System.out.println("setFutureCompleteExceptionallyRunnable returned");
             return null;
           }
         };
@@ -508,6 +513,7 @@ public class AbstractFutureTest extends TestCase {
               numSuccessfulSetCalls.incrementAndGet();
             }
             awaitUnchecked(barrier);
+            System.out.println("setFutureCancelRunnable returned");
             return null;
           }
         };
@@ -525,6 +531,7 @@ public class AbstractFutureTest extends TestCase {
               finalResults.add(CancellationException.class);
             } finally {
               awaitUnchecked(barrier);
+              System.out.println("One collectResultsRunnable done");
             }
           }
         };
@@ -549,6 +556,7 @@ public class AbstractFutureTest extends TestCase {
               }
             }
             awaitUnchecked(barrier);
+            System.out.println("One collectResultsTimedGetRunnable done");
           }
         };
     System.out.println("All Runnables defined");
