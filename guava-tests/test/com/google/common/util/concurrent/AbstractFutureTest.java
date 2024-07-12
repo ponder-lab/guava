@@ -591,6 +591,7 @@ public class AbstractFutureTest extends TestCase {
       System.out.println("future defined");
       currentFuture.set(future);
       System.out.println("future set as current");
+      System.out.println("Number of tasks: " + allTasks.size());
       for (Callable<?> task : allTasks) {
         System.out.println("Submitting task " + task);
         @SuppressWarnings("unused") // https://errorprone.info/bugpattern/FutureReturnValueIgnored
@@ -737,6 +738,7 @@ public class AbstractFutureTest extends TestCase {
       System.out.println("future set as current");
       setFutureFuture.set(setFuture);
       System.out.println("setFuture set as setFutureFuture");
+      System.out.println("Number of tasks: " + allTasks.size());
       for (Runnable task : allTasks) {
         System.out.println("Executing task " + task);
         executor.execute(task);
@@ -841,6 +843,7 @@ public class AbstractFutureTest extends TestCase {
       System.out.println("future defined");
       currentFuture.set(future);
       System.out.println("future set as current");
+      System.out.println("Number of tasks: " + allTasks.size());
       for (Callable<?> task : allTasks) {
         System.out.println("Submitting task " + task);
         @SuppressWarnings("unused") // https://errorprone.info/bugpattern/FutureReturnValueIgnored
