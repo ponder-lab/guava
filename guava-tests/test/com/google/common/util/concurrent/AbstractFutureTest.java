@@ -443,6 +443,7 @@ public class AbstractFutureTest extends TestCase {
             if (currentFuture.get().set("set")) {
               numSuccessfulSetCalls.incrementAndGet();
             }
+            System.out.println("completeSuccessfullyRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
             System.out.println("completeSuccessfullyRunnable returned");
             return null;
@@ -457,6 +458,7 @@ public class AbstractFutureTest extends TestCase {
             if (currentFuture.get().setException(failureCause)) {
               numSuccessfulSetCalls.incrementAndGet();
             }
+            System.out.println("completeExceptionallyRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
             System.out.println("completeExceptionallyRunnable returned");
             return null;
@@ -469,6 +471,7 @@ public class AbstractFutureTest extends TestCase {
             if (currentFuture.get().cancel(true)) {
               numSuccessfulSetCalls.incrementAndGet();
             }
+            System.out.println("cancelRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
             System.out.println("cancelRunnable returned");
             return null;
@@ -483,6 +486,7 @@ public class AbstractFutureTest extends TestCase {
             if (currentFuture.get().setFuture(future)) {
               numSuccessfulSetCalls.incrementAndGet();
             }
+            System.out.println("setFutureCompleteSuccessfullyRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
             System.out.println("setFutureCompleteSuccessfullyRunnable returned");
             return null;
@@ -498,6 +502,7 @@ public class AbstractFutureTest extends TestCase {
             if (currentFuture.get().setFuture(future)) {
               numSuccessfulSetCalls.incrementAndGet();
             }
+            System.out.println("setFutureCompleteExceptionallyRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
             System.out.println("setFutureCompleteExceptionallyRunnable returned");
             return null;
@@ -512,6 +517,7 @@ public class AbstractFutureTest extends TestCase {
             if (currentFuture.get().setFuture(future)) {
               numSuccessfulSetCalls.incrementAndGet();
             }
+            System.out.println("setFutureCancelRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
             System.out.println("setFutureCancelRunnable returned");
             return null;
@@ -530,6 +536,7 @@ public class AbstractFutureTest extends TestCase {
             } catch (CancellationException e) {
               finalResults.add(CancellationException.class);
             } finally {
+              System.out.println("One collectResultsRunnable calling awaitUnchecked(barrier)");
               awaitUnchecked(barrier);
               System.out.println("One collectResultsRunnable done");
             }
@@ -555,6 +562,7 @@ public class AbstractFutureTest extends TestCase {
                 // loop
               }
             }
+            System.out.println("One collectResultsTimedGetRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
             System.out.println("One collectResultsTimedGetRunnable done");
           }
