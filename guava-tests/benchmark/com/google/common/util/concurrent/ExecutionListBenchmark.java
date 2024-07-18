@@ -246,6 +246,12 @@ public class ExecutionListBenchmark {
 
   @BeforeExperiment
   void setUp() throws Exception {
+    // Not good to refactor this. Default ThreadPoolExecutor policy is to wait until requests come in
+    // to create threads; the prestartAllCoreThreads() overrides this default policy, creating core
+    // threads immediately. This could potentially reduce latency caused by the overhead of creating
+    // threads. Executors.newVirtualThreadPerTaskExecutor "starts a new virtual Thread for each task,"
+    // which seems to align with the default TPE policy, and prestartAllCoreThreads() is exclusive to
+    // ThreadPoolExecutor.
     executorService =
         new ThreadPoolExecutor(
             NUM_THREADS,
