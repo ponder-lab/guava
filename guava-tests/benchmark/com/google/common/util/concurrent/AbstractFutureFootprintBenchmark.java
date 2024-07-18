@@ -68,15 +68,12 @@ public class AbstractFutureFootprintBenchmark {
     final Facade<Object> f = impl.newFacade();
     for (int i = 0; i < numThreads; i++) {
       Thread thread =
-          new Thread() {
-            @Override
-            public void run() {
-              try {
-                f.get();
-              } catch (Throwable expected) {
-              }
+          Thread.ofVirtual().unstarted(() -> {
+            try {
+              f.get();
+            } catch (Throwable expected) {
             }
-          };
+          });
       thread.start();
       blockedThreads.add(thread);
     }

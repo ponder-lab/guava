@@ -20,7 +20,7 @@ import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.truth.Truth.assertThat;
 import static java.lang.Long.MAX_VALUE;
 import static java.lang.Thread.currentThread;
-import static java.util.concurrent.Executors.newCachedThreadPool;
+import static java.util.concurrent.Executors.newVirtualThreadPerTaskExecutor;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -72,7 +72,7 @@ public class QueuesTest extends TestCase {
 
   @Override
   public void setUp() {
-    threadPool = newCachedThreadPool();
+    threadPool = newVirtualThreadPerTaskExecutor();
   }
 
   @Override

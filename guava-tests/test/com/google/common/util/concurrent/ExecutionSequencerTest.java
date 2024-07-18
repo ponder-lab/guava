@@ -51,7 +51,7 @@ public class ExecutionSequencerTest extends TestCase {
 
   @Override
   public void setUp() throws Exception {
-    executor = Executors.newCachedThreadPool();
+    executor = Executors.newVirtualThreadPerTaskExecutor();
     serializer = ExecutionSequencer.create();
     firstFuture = SettableFuture.create();
     firstCallable = new TestCallable(firstFuture);
@@ -335,7 +335,7 @@ public class ExecutionSequencerTest extends TestCase {
     final ArrayList<ListenableFuture<Integer>> lengthChecks = new ArrayList<>();
     final List<Integer> completeLengthChecks;
     final int baseStackDepth;
-    ExecutorService service = Executors.newFixedThreadPool(5);
+    ExecutorService service = Executors.newVirtualThreadPerTaskExecutor();
     try {
       // Avoid counting frames from the executor itself, or the ExecutionSequencer
       baseStackDepth =

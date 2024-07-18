@@ -84,7 +84,7 @@ public class SimpleTimeLimiterTest extends TestCase {
 
   private TimeLimiter service;
 
-  private static final ExecutorService executor = Executors.newFixedThreadPool(1);
+  private static final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
 
   @Override
   protected void setUp() throws Exception {

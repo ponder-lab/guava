@@ -141,7 +141,7 @@ public class TrustedListenableFutureTaskTest extends TestCase {
   @GwtIncompatible // blocking wait
   public void testRunIdempotency() throws Exception {
     final int numThreads = 10;
-    final ExecutorService executor = Executors.newFixedThreadPool(numThreads);
+    final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
     for (int i = 0; i < 1000; i++) {
       final AtomicInteger counter = new AtomicInteger();
       final TrustedListenableFutureTask<Integer> task =

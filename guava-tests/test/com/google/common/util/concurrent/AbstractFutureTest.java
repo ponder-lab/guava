@@ -372,7 +372,7 @@ public class AbstractFutureTest extends TestCase {
   }
 
   public void testCompletionFinishesWithDone() {
-    ExecutorService executor = Executors.newFixedThreadPool(10);
+    ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
     for (int i = 0; i < 50000; i++) {
       final AbstractFuture<String> future = new AbstractFuture<String>() {};
       final AtomicReference<String> errorMessage = Atomics.newReference();

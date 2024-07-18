@@ -131,7 +131,7 @@ public class ListenerCallQueueTest extends TestCase {
 
   public void testEnqueueAndDispatch_multithreaded() throws InterruptedException {
     Object listener = new Object();
-    ExecutorService service = Executors.newFixedThreadPool(4);
+    ExecutorService service = Executors.newVirtualThreadPerTaskExecutor();
     ListenerCallQueue<Object> queue = new ListenerCallQueue<>();
     try {
       queue.addListener(listener, service);
@@ -155,7 +155,7 @@ public class ListenerCallQueueTest extends TestCase {
   public void testEnqueueAndDispatch_multithreaded_withThrowingRunnable()
       throws InterruptedException {
     Object listener = new Object();
-    ExecutorService service = Executors.newFixedThreadPool(4);
+    ExecutorService service = Executors.newVirtualThreadPerTaskExecutor();
     ListenerCallQueue<Object> queue = new ListenerCallQueue<>();
     try {
       queue.addListener(listener, service);

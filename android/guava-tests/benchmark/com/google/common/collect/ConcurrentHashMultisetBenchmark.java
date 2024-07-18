@@ -66,7 +66,7 @@ public class ConcurrentHashMultisetBenchmark {
     }
     keys = builder.build();
     threadPool =
-        Executors.newFixedThreadPool(threads, new ThreadFactoryBuilder().setDaemon(true).build());
+        Executors.newVirtualThreadPerTaskExecutor();
   }
 
   @Benchmark

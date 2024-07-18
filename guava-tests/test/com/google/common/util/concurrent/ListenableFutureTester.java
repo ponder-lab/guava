@@ -44,7 +44,7 @@ public class ListenableFutureTester {
   private final CountDownLatch latch;
 
   public ListenableFutureTester(ListenableFuture<?> future) {
-    this.exec = Executors.newCachedThreadPool();
+    this.exec = Executors.newVirtualThreadPerTaskExecutor();
     this.future = checkNotNull(future);
     this.latch = new CountDownLatch(1);
   }

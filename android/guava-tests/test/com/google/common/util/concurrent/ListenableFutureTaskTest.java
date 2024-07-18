@@ -60,7 +60,7 @@ public class ListenableFutureTaskTest extends TestCase {
   protected void setUp() throws Exception {
     super.setUp();
 
-    exec = Executors.newCachedThreadPool();
+    exec = Executors.newVirtualThreadPerTaskExecutor();
 
     task.addListener(
         new Runnable() {

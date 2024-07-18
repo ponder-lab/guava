@@ -372,7 +372,7 @@ public class AbstractFutureTest extends TestCase {
   }
 
   public void testCompletionFinishesWithDone() {
-    ExecutorService executor = Executors.newFixedThreadPool(10);
+    ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
     for (int i = 0; i < 50000; i++) {
       final AbstractFuture<String> future = new AbstractFuture<String>() {};
       final AtomicReference<String> errorMessage = Atomics.newReference();
@@ -432,6 +432,8 @@ public class AbstractFutureTest extends TestCase {
                 + 50 // for the listeners
                 + 50 // for the blocking get threads,
                 + 1); // for the main thread
+    // Refactoring this causes AbstractFutureFallbackAtomicHelperTest to hang forever
+    // (https://github.com/ponder-lab/guava/actions/runs/9654663319/job/26629281352#step:6:1102)
     final ExecutorService executor = Executors.newFixedThreadPool(barrier.getParties());
     final AtomicReference<AbstractFuture<String>> currentFuture = Atomics.newReference();
     final AtomicInteger numSuccessfulSetCalls = new AtomicInteger();
@@ -617,6 +619,8 @@ public class AbstractFutureTest extends TestCase {
                 + size // for the listeners
                 + size // for the get threads,
                 + 1); // for the main thread
+    // Refactoring this causes AbstractFutureFallbackAtomicHelperTest to hang forever
+    // (https://github.com/ponder-lab/guava/actions/runs/9654663319/job/26629281352#step:6:1102)
     final ExecutorService executor = Executors.newFixedThreadPool(barrier.getParties());
     final AtomicReference<AbstractFuture<String>> currentFuture = Atomics.newReference();
     final AtomicReference<AbstractFuture<String>> setFutureFuture = Atomics.newReference();
@@ -750,6 +754,8 @@ public class AbstractFutureTest extends TestCase {
             2 // for the setter threads
                 + 1 // for the blocking get thread,
                 + 1); // for the main thread
+    // Refactoring this causes AbstractFutureFallbackAtomicHelperTest to hang forever
+    // (https://github.com/ponder-lab/guava/actions/runs/9654663319/job/26629281352#step:6:1102)
     final ExecutorService executor = Executors.newFixedThreadPool(barrier.getParties());
     final AtomicReference<AbstractFuture<String>> currentFuture = Atomics.newReference();
     final AtomicBoolean setFutureSuccess = new AtomicBoolean();
