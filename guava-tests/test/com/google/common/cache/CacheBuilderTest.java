@@ -595,7 +595,6 @@ public class CacheBuilderTest extends TestCase {
 
     ExecutorService threadPool = Executors.newVirtualThreadPerTaskExecutor();
     for (int i = 0; i < nTasks; i++) {
-      System.out.println("Submitting runnable i = " + i);
       @SuppressWarnings("unused") // https://errorprone.info/bugpattern/FutureReturnValueIgnored
       Future<?> possiblyIgnoredError =
           threadPool.submit(
@@ -603,7 +602,6 @@ public class CacheBuilderTest extends TestCase {
                 @Override
                 public void run() {
                   for (int j = 0; j < getsPerTask; j++) {
-                    System.out.println("Runnable i = " + i + ": get j = " + j);
                     try {
                       cache.getUnchecked("key" + random.nextInt(nUniqueKeys));
                     } catch (RuntimeException e) {
