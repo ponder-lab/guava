@@ -595,6 +595,7 @@ public class CacheBuilderTest extends TestCase {
 
     ExecutorService threadPool = Executors.newVirtualThreadPerTaskExecutor();
     for (int i = 0; i < nTasks; i++) {
+      System.out.println("Submitting runnable i = " + i);
       @SuppressWarnings("unused") // https://errorprone.info/bugpattern/FutureReturnValueIgnored
       Future<?> possiblyIgnoredError =
           threadPool.submit(
@@ -602,6 +603,7 @@ public class CacheBuilderTest extends TestCase {
                 @Override
                 public void run() {
                   for (int j = 0; j < getsPerTask; j++) {
+                    System.out.println("Runnable i = " + i + ": get j = " + j);
                     try {
                       cache.getUnchecked("key" + random.nextInt(nUniqueKeys));
                     } catch (RuntimeException e) {
@@ -610,9 +612,11 @@ public class CacheBuilderTest extends TestCase {
                 }
               });
     }
-
+    System.out.println("For loop finished");
     threadPool.shutdown();
+    System.out.println("threadPool.shutdown() finished");
     threadPool.awaitTermination(300, SECONDS);
+    System.out.println("threadPool.awaitTermination(...) finished");
 
     // Since we're not doing any more cache operations, and the cache only expires/evicts when doing
     // other operations, the cache and the removal queue won't change from this point on.
