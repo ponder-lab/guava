@@ -627,6 +627,7 @@ public class CacheBuilderTest extends TestCase {
     System.out.println("Assertion 1 passed");
 
     CacheStats stats = cache.stats();
+    System.out.println("stats created");
     assertEquals(removalListener.size(), stats.evictionCount());
     System.out.println("Assertion 2 passed");
     assertEquals(computeCount.get(), stats.loadSuccessCount());
