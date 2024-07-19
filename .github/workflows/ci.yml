@@ -7,6 +7,7 @@ on:
       - java21_rethreader
       - fibers_rethreader
       - fibers_rethreader_temp
+      - fibers_rethreader_temp_concurrency64
   pull_request:
     branches:
       - main_rethreader
