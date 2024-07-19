@@ -585,7 +585,7 @@ public class CacheBuilderTest extends TestCase {
     final LoadingCache<String, String> cache =
         CacheBuilder.newBuilder()
             .recordStats()
-            .concurrencyLevel(2)
+            .concurrencyLevel(64)
             .expireAfterWrite(100, MILLISECONDS)
             .removalListener(removalListener)
             .maximumSize(5000)
