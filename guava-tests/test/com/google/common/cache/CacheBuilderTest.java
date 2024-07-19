@@ -607,6 +607,7 @@ public class CacheBuilderTest extends TestCase {
                     } catch (RuntimeException e) {
                     }
                   }
+                  System.out.println("One Runnable finished");
                 }
               });
     }
