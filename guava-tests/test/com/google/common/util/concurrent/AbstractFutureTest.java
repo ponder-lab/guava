@@ -562,7 +562,6 @@ public class AbstractFutureTest extends TestCase {
             Future<String> future = currentFuture.get();
             while (true) {
               try {
-                System.out.println("One collectResultsTimedGetRunnable calling Uninterruptibles.getUninterruptibly(...)");
                 String result = Uninterruptibles.getUninterruptibly(future, 0, TimeUnit.SECONDS);
                 finalResults.add(result);
                 break;
