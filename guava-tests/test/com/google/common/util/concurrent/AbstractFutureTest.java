@@ -541,7 +541,6 @@ public class AbstractFutureTest extends TestCase {
           @Override
           public void run() {
             try {
-              System.out.println("One collectResultsRunnable calling Uninterruptibles.getUninterruptibly(...)");
               String result = Uninterruptibles.getUninterruptibly(currentFuture.get());
               finalResults.add(result);
             } catch (ExecutionException e) {
