@@ -442,6 +442,8 @@ public class AbstractFutureTest extends TestCase {
           public @Nullable Void call() {
             if (currentFuture.get().set("set")) {
               numSuccessfulSetCalls.incrementAndGet();
+              System.out.println("(Incremented by completeSuccessfullyRunnable)");
+              System.out.println("numSuccessfulSetCalls == " + numSuccessfulSetCalls);
             }
             System.out.println("completeSuccessfullyRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
@@ -457,6 +459,8 @@ public class AbstractFutureTest extends TestCase {
           public @Nullable Void call() {
             if (currentFuture.get().setException(failureCause)) {
               numSuccessfulSetCalls.incrementAndGet();
+              System.out.println("(Incremented by completeExceptionallyRunnable)");
+              System.out.println("numSuccessfulSetCalls == " + numSuccessfulSetCalls);
             }
             System.out.println("completeExceptionallyRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
@@ -470,6 +474,8 @@ public class AbstractFutureTest extends TestCase {
           public @Nullable Void call() {
             if (currentFuture.get().cancel(true)) {
               numSuccessfulSetCalls.incrementAndGet();
+              System.out.println("(Incremented by cancelRunnable)");
+              System.out.println("numSuccessfulSetCalls == " + numSuccessfulSetCalls);
             }
             System.out.println("cancelRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
@@ -485,6 +491,8 @@ public class AbstractFutureTest extends TestCase {
           public @Nullable Void call() {
             if (currentFuture.get().setFuture(future)) {
               numSuccessfulSetCalls.incrementAndGet();
+              System.out.println("(Incremented by setFutureCompleteSuccessfullyRunnable)");
+              System.out.println("numSuccessfulSetCalls == " + numSuccessfulSetCalls);
             }
             System.out.println("setFutureCompleteSuccessfullyRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
@@ -501,6 +509,8 @@ public class AbstractFutureTest extends TestCase {
           public @Nullable Void call() {
             if (currentFuture.get().setFuture(future)) {
               numSuccessfulSetCalls.incrementAndGet();
+              System.out.println("(Incremented by setFutureCompleteExceptionallyRunnable)");
+              System.out.println("numSuccessfulSetCalls == " + numSuccessfulSetCalls);
             }
             System.out.println("setFutureCompleteExceptionallyRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
@@ -516,6 +526,8 @@ public class AbstractFutureTest extends TestCase {
           public @Nullable Void call() {
             if (currentFuture.get().setFuture(future)) {
               numSuccessfulSetCalls.incrementAndGet();
+              System.out.println("(Incremented by setFutureCompleteExceptionallyRunnable)");
+              System.out.println("numSuccessfulSetCalls == " + numSuccessfulSetCalls);
             }
             System.out.println("setFutureCancelRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
@@ -529,6 +541,7 @@ public class AbstractFutureTest extends TestCase {
           @Override
           public void run() {
             try {
+              System.out.println("One collectResultsRunnable calling Uninterruptibles.getUninterruptibly(...)");
               String result = Uninterruptibles.getUninterruptibly(currentFuture.get());
               finalResults.add(result);
             } catch (ExecutionException e) {
@@ -549,13 +562,16 @@ public class AbstractFutureTest extends TestCase {
             Future<String> future = currentFuture.get();
             while (true) {
               try {
+                System.out.println("One collectResultsTimedGetRunnable calling Uninterruptibles.getUninterruptibly(...)");
                 String result = Uninterruptibles.getUninterruptibly(future, 0, TimeUnit.SECONDS);
                 finalResults.add(result);
                 break;
               } catch (ExecutionException e) {
+                System.out.println("One collectResultsTimedGetRunnable caused ExecutionException");
                 finalResults.add(e.getCause());
                 break;
               } catch (CancellationException e) {
+                System.out.println("One collectResultsTimedGetRunnable caused CancellationException");
                 finalResults.add(CancellationException.class);
                 break;
               } catch (TimeoutException e) {
