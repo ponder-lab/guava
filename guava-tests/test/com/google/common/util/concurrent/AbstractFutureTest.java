@@ -423,6 +423,7 @@ public class AbstractFutureTest extends TestCase {
    */
 
   public void testFutureBash() {
+    System.out.println("Beginning testFutureBash()");
     if (isWindows()) {
       return; // TODO: b/136041958 - Running very slowly on Windows CI.
     }
@@ -432,7 +433,7 @@ public class AbstractFutureTest extends TestCase {
                 + 50 // for the listeners
                 + 50 // for the blocking get threads,
                 + 1); // for the main thread
-    final ExecutorService executor = Executors.newFixedThreadPool(barrier.getParties());
+    final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
     final AtomicReference<AbstractFuture<String>> currentFuture = Atomics.newReference();
     final AtomicInteger numSuccessfulSetCalls = new AtomicInteger();
     Callable<@Nullable Void> completeSuccessfullyRunnable =
@@ -441,8 +442,12 @@ public class AbstractFutureTest extends TestCase {
           public @Nullable Void call() {
             if (currentFuture.get().set("set")) {
               numSuccessfulSetCalls.incrementAndGet();
+              System.out.println("(Incremented by completeSuccessfullyRunnable)");
+              System.out.println("numSuccessfulSetCalls == " + numSuccessfulSetCalls);
             }
+            System.out.println("completeSuccessfullyRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
+            System.out.println("completeSuccessfullyRunnable returned");
             return null;
           }
         };
@@ -454,8 +459,12 @@ public class AbstractFutureTest extends TestCase {
           public @Nullable Void call() {
             if (currentFuture.get().setException(failureCause)) {
               numSuccessfulSetCalls.incrementAndGet();
+              System.out.println("(Incremented by completeExceptionallyRunnable)");
+              System.out.println("numSuccessfulSetCalls == " + numSuccessfulSetCalls);
             }
+            System.out.println("completeExceptionallyRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
+            System.out.println("completeExceptionallyRunnable returned");
             return null;
           }
         };
@@ -465,8 +474,12 @@ public class AbstractFutureTest extends TestCase {
           public @Nullable Void call() {
             if (currentFuture.get().cancel(true)) {
               numSuccessfulSetCalls.incrementAndGet();
+              System.out.println("(Incremented by cancelRunnable)");
+              System.out.println("numSuccessfulSetCalls == " + numSuccessfulSetCalls);
             }
+            System.out.println("cancelRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
+            System.out.println("cancelRunnable returned");
             return null;
           }
         };
@@ -478,8 +491,12 @@ public class AbstractFutureTest extends TestCase {
           public @Nullable Void call() {
             if (currentFuture.get().setFuture(future)) {
               numSuccessfulSetCalls.incrementAndGet();
+              System.out.println("(Incremented by setFutureCompleteSuccessfullyRunnable)");
+              System.out.println("numSuccessfulSetCalls == " + numSuccessfulSetCalls);
             }
+            System.out.println("setFutureCompleteSuccessfullyRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
+            System.out.println("setFutureCompleteSuccessfullyRunnable returned");
             return null;
           }
         };
@@ -492,8 +509,12 @@ public class AbstractFutureTest extends TestCase {
           public @Nullable Void call() {
             if (currentFuture.get().setFuture(future)) {
               numSuccessfulSetCalls.incrementAndGet();
+              System.out.println("(Incremented by setFutureCompleteExceptionallyRunnable)");
+              System.out.println("numSuccessfulSetCalls == " + numSuccessfulSetCalls);
             }
+            System.out.println("setFutureCompleteExceptionallyRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
+            System.out.println("setFutureCompleteExceptionallyRunnable returned");
             return null;
           }
         };
@@ -505,8 +526,12 @@ public class AbstractFutureTest extends TestCase {
           public @Nullable Void call() {
             if (currentFuture.get().setFuture(future)) {
               numSuccessfulSetCalls.incrementAndGet();
+              System.out.println("(Incremented by setFutureCompleteExceptionallyRunnable)");
+              System.out.println("numSuccessfulSetCalls == " + numSuccessfulSetCalls);
             }
+            System.out.println("setFutureCancelRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
+            System.out.println("setFutureCancelRunnable returned");
             return null;
           }
         };
@@ -523,7 +548,9 @@ public class AbstractFutureTest extends TestCase {
             } catch (CancellationException e) {
               finalResults.add(CancellationException.class);
             } finally {
+              System.out.println("One collectResultsRunnable calling awaitUnchecked(barrier)");
               awaitUnchecked(barrier);
+              System.out.println("One collectResultsRunnable done");
             }
           }
         };
@@ -538,18 +565,23 @@ public class AbstractFutureTest extends TestCase {
                 finalResults.add(result);
                 break;
               } catch (ExecutionException e) {
+                System.out.println("One collectResultsTimedGetRunnable caused ExecutionException");
                 finalResults.add(e.getCause());
                 break;
               } catch (CancellationException e) {
+                System.out.println("One collectResultsTimedGetRunnable caused CancellationException");
                 finalResults.add(CancellationException.class);
                 break;
               } catch (TimeoutException e) {
                 // loop
               }
             }
+            System.out.println("One collectResultsTimedGetRunnable calling awaitUnchecked(barrier)");
             awaitUnchecked(barrier);
+            System.out.println("One collectResultsTimedGetRunnable done");
           }
         };
+    System.out.println("All Runnables defined");
     List<Callable<?>> allTasks = new ArrayList<>();
     allTasks.add(completeSuccessfullyRunnable);
     allTasks.add(completeExceptionallyRunnable);
@@ -557,13 +589,17 @@ public class AbstractFutureTest extends TestCase {
     allTasks.add(setFutureCompleteSuccessfullyRunnable);
     allTasks.add(setFutureCompleteExceptionallyRunnable);
     allTasks.add(setFutureCancelRunnable);
+    System.out.println("About to start first for loop");
     for (int k = 0; k < 50; k++) {
+      System.out.println("First for loop: k = " + k);
       // For each listener we add a task that submits it to the executor directly for the blocking
       // get use case and another task that adds it as a listener to the future to exercise both
       // racing addListener calls and addListener calls completing after the future completes.
       final Runnable listener =
           k % 2 == 0 ? collectResultsRunnable : collectResultsTimedGetRunnable;
+      System.out.println("listener defined");
       allTasks.add(Executors.callable(listener));
+      System.out.println("Executors.callable(listener) added");
       allTasks.add(
           new Callable<@Nullable Void>() {
             @Override
@@ -572,18 +608,29 @@ public class AbstractFutureTest extends TestCase {
               return null;
             }
           });
+      System.out.println("new Callable added");
     }
+    System.out.println("First for loop done");
     assertEquals(allTasks.size() + 1, barrier.getParties());
+    System.out.println("Assertion passed; about to start second for loop");
     for (int i = 0; i < 1000; i++) {
+      System.out.println("Second for loop: i = " + i);
       Collections.shuffle(allTasks);
+      System.out.println("allTasks shuffled");
       final AbstractFuture<String> future = new AbstractFuture<String>() {};
+      System.out.println("future defined");
       currentFuture.set(future);
+      System.out.println("future set as current");
+      System.out.println("Number of tasks: " + allTasks.size());
       for (Callable<?> task : allTasks) {
+        System.out.println("Submitting task " + task);
         @SuppressWarnings("unused") // https://errorprone.info/bugpattern/FutureReturnValueIgnored
         Future<?> possiblyIgnoredError = executor.submit(task);
       }
       awaitUnchecked(barrier);
+      System.out.println("awaitUnchecked(barrier) done");
       assertThat(future.isDone()).isTrue();
+      System.out.println("Assertion passed");
       // inspect state and ensure it is correct!
       // asserts that all get calling threads received the same value
       Object result = Iterables.getOnlyElement(finalResults);
@@ -607,6 +654,7 @@ public class AbstractFutureTest extends TestCase {
 
   // setFuture and cancel() interact in more complicated ways than the other setters.
   public void testSetFutureCancelBash() {
+    System.out.println("Beginning testSetFutureCancelBash()");
     if (isWindows()) {
       return; // TODO: b/136041958 - Running very slowly on Windows CI.
     }
@@ -617,7 +665,7 @@ public class AbstractFutureTest extends TestCase {
                 + size // for the listeners
                 + size // for the get threads,
                 + 1); // for the main thread
-    final ExecutorService executor = Executors.newFixedThreadPool(barrier.getParties());
+    final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
     final AtomicReference<AbstractFuture<String>> currentFuture = Atomics.newReference();
     final AtomicReference<AbstractFuture<String>> setFutureFuture = Atomics.newReference();
     final AtomicBoolean setFutureSetSuccess = new AtomicBoolean();
@@ -681,16 +729,21 @@ public class AbstractFutureTest extends TestCase {
             awaitUnchecked(barrier);
           }
         };
+    System.out.println("All Runnables defined");
     List<Runnable> allTasks = new ArrayList<>();
     allTasks.add(cancelRunnable);
     allTasks.add(setFutureCompleteSuccessfullyRunnable);
+    System.out.println("About to start first for loop");
     for (int k = 0; k < size; k++) {
+      System.out.println("First for loop: k = " + k);
       // For each listener we add a task that submits it to the executor directly for the blocking
       // get use case and another task that adds it as a listener to the future to exercise both
       // racing addListener calls and addListener calls completing after the future completes.
       final Runnable listener =
           k % 2 == 0 ? collectResultsRunnable : collectResultsTimedGetRunnable;
+      System.out.println("listener defined");
       allTasks.add(listener);
+      System.out.println("listener added");
       allTasks.add(
           new Runnable() {
             @Override
@@ -698,19 +751,32 @@ public class AbstractFutureTest extends TestCase {
               currentFuture.get().addListener(listener, executor);
             }
           });
+      System.out.println("new Runnable added");
     }
+    System.out.println("First for loop done");
     assertEquals(allTasks.size() + 1, barrier.getParties()); // sanity check
+    System.out.println("Assertion passed; about to start second for loop");
     for (int i = 0; i < 1000; i++) {
+      System.out.println("Second for loop: i = " + i);
       Collections.shuffle(allTasks);
+      System.out.println("allTasks shuffled");
       final AbstractFuture<String> future = new AbstractFuture<String>() {};
+      System.out.println("future defined");
       final AbstractFuture<String> setFuture = new AbstractFuture<String>() {};
+      System.out.println("setFuture defined");
       currentFuture.set(future);
+      System.out.println("future set as current");
       setFutureFuture.set(setFuture);
+      System.out.println("setFuture set as setFutureFuture");
+      System.out.println("Number of tasks: " + allTasks.size());
       for (Runnable task : allTasks) {
+        System.out.println("Executing task " + task);
         executor.execute(task);
       }
       awaitUnchecked(barrier);
+      System.out.println("awaitUnchecked(barrier) done");
       assertThat(future.isDone()).isTrue();
+      System.out.println("Assertion passed");
       // inspect state and ensure it is correct!
       // asserts that all get calling threads received the same value
       Object result = Iterables.getOnlyElement(finalResults);
@@ -745,12 +811,13 @@ public class AbstractFutureTest extends TestCase {
   // Test to ensure that when calling setFuture with a done future only setFuture or cancel can
   // return true.
   public void testSetFutureCancelBash_withDoneFuture() {
+    System.out.println("Beginning testSetFutureCancelBash_withDoneFuture()");
     final CyclicBarrier barrier =
         new CyclicBarrier(
             2 // for the setter threads
                 + 1 // for the blocking get thread,
                 + 1); // for the main thread
-    final ExecutorService executor = Executors.newFixedThreadPool(barrier.getParties());
+    final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
     final AtomicReference<AbstractFuture<String>> currentFuture = Atomics.newReference();
     final AtomicBoolean setFutureSuccess = new AtomicBoolean();
     final AtomicBoolean cancellationSuccess = new AtomicBoolean();
@@ -791,21 +858,31 @@ public class AbstractFutureTest extends TestCase {
             }
           }
         };
+    System.out.println("All Callables defined");
     List<Callable<?>> allTasks = new ArrayList<>();
     allTasks.add(cancelRunnable);
     allTasks.add(setFutureCompleteSuccessfullyRunnable);
     allTasks.add(Executors.callable(collectResultsRunnable));
     assertEquals(allTasks.size() + 1, barrier.getParties()); // sanity check
+    System.out.println("About to start for loop");
     for (int i = 0; i < 1000; i++) {
+      System.out.println("For loop: i = " + i);
       Collections.shuffle(allTasks);
+      System.out.println("allTasks shuffled");
       final AbstractFuture<String> future = new AbstractFuture<String>() {};
+      System.out.println("future defined");
       currentFuture.set(future);
+      System.out.println("future set as current");
+      System.out.println("Number of tasks: " + allTasks.size());
       for (Callable<?> task : allTasks) {
+        System.out.println("Submitting task " + task);
         @SuppressWarnings("unused") // https://errorprone.info/bugpattern/FutureReturnValueIgnored
         Future<?> possiblyIgnoredError = executor.submit(task);
       }
       awaitUnchecked(barrier);
+      System.out.println("awaitUnchecked(barrier) done");
       assertThat(future.isDone()).isTrue();
+      System.out.println("Assertion passed");
       // inspect state and ensure it is correct!
       // asserts that all get calling threads received the same value
       Object result = Iterables.getOnlyElement(finalResults);
