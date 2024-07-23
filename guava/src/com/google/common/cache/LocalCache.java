@@ -2076,6 +2076,7 @@ class LocalCache<K, V> extends AbstractMap<K, V> implements ConcurrentMap<K, V> 
         }
 
         // at this point e is either null or expired;
+        System.out.println("Calling lockedGetOrLoad");
         return lockedGetOrLoad(key, hash, loader);
       } catch (ExecutionException ee) {
         Throwable cause = ee.getCause();
